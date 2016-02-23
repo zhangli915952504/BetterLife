@@ -1,0 +1,25 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                tools:context=".fragment.NearFragment">
+
+    <com.zhangli.betterlife.myView.MyTitleBar
+        android:id="@+id/more_title_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:title_left_img="@drawable/more_logo"
+        app:title_right_img="@drawable/tab_more"/>
+
+
+    <TextView
+        android:layout_below="@id/more_title_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_toEndOf="@id/more_title_img"
+        android:text="@string/more_fragment"/>
+
+
+</RelativeLayout>

@@ -1,0 +1,10 @@
+<resources>
+    <string name="app_name">BetterLife</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="near_fragment">附近</string>
+    <string name="cheap_fragment">找便宜</string>
+    <string name="super_fragment">特惠</string>
+    <string name="pocket_fragment">口袋</string>
+    <string name="more_fragment">更多</string>
+</resources>

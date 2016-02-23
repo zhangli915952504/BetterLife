@@ -1,0 +1,23 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                xmlns:app="http://schemas.android.com/apk/res-auto"
+                android:layout_height="match_parent"
+                tools:context=".fragment.NearFragment">
+
+    <com.zhangli.betterlife.myView.MyTitleBar
+        android:id="@+id/cheap_title_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:title_left_img="@drawable/cheap_logo"
+        app:title_right_img="@drawable/tab_cheap"/>
+
+    <TextView
+        android:layout_below="@id/cheap_title_img"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/cheap_fragment"
+        android:layout_centerInParent="true"/>
+
+
+</RelativeLayout>
