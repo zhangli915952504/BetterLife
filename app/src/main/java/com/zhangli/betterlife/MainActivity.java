@@ -47,7 +47,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         mViewPager.setAdapter(pagerAdapter);
         //缓存4张fragment（好像是这样）
         mViewPager.setOffscreenPageLimit(4);
-
     }
 
     public void inintView() {
@@ -63,6 +62,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
         more_btn.setOnClickListener(this);
 
         mViewPager = (ViewPager) findViewById(R.id.viewpager);
+        viewPagerListener();
     }
 
     @Override
@@ -85,17 +85,23 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                 break;
         }
     }
+    public void clearChecked(){
+        cheap_btn.setChecked(false);
+        super_btn.setChecked(false);
+        near_btn.setChecked(false);
+        pocket_btn.setChecked(false);
+        more_btn.setChecked(false);
+    }
+
     public void viewPagerListener() {
-
-
         mViewPager.setOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
 
             }
-
             @Override
             public void onPageSelected(int position) {
+                clearChecked();
                 switch (position) {
                     case TAB_NEAR:
                         near_btn.setChecked(true);
@@ -114,7 +120,6 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
                         break;
                 }
             }
-
             @Override
             public void onPageScrollStateChanged(int state) {
 
@@ -123,7 +128,7 @@ public class MainActivity extends FragmentActivity implements View.OnClickListen
     }
 
 
-    //fragmentlist
+    /**fragmentlist*/
     public static class PagerAdapter extends FragmentPagerAdapter {
         private List<Fragment> list = new ArrayList<>();
 

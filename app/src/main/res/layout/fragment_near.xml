@@ -19,12 +19,45 @@
         android:layout_below="@id/near_title_img"/>
 
     <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:layout_below="@id/expandtab_view"
-        android:layout_centerInParent="true"
-        android:layout_centerVertical="true"
-        android:text="@string/near_fragment"/>
+        android:id="@+id/map_text"
+        android:text="正在定位..."
+        android:textSize="15sp"
+        android:singleLine="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"/>
+    <FrameLayout
+        android:layout_below="@id/map_text"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <com.warmtel.android.xlistview.XListView
+            android:id="@+id/main_xlistview_id"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_horizontal|bottom"/>
+
+        <RelativeLayout
+            android:id="@+id/main_relative_layout_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center">
+
+            <ProgressBar
+                android:id="@+id/merchant_progressbar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/merchant_progressbar"
+                android:layout_gravity="center"
+                android:text="加载中……"/>
+        </RelativeLayout>
+
+    </FrameLayout>
 
 
 </RelativeLayout>

@@ -5,6 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/BetterLife.iml" filepath="$PROJECT_DIR$/BetterLife.iml" />
       <module fileurl="file://$PROJECT_DIR$/android-expandpoptab-library/android-expandpoptab-library.iml" filepath="$PROJECT_DIR$/android-expandpoptab-library/android-expandpoptab-library.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/imageSlider_viktor_library/imageSlider_viktor_library.iml" filepath="$PROJECT_DIR$/imageSlider_viktor_library/imageSlider_viktor_library.iml" />
     </modules>
   </component>
 </project>

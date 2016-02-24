@@ -6,13 +6,21 @@
     android:layout_height="match_parent"
     tools:context="com.zhangli.betterlife.MainActivity">
 
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/viewpager"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/linearLayout"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_margin="5dp"
         android:orientation="horizontal"
-        android:background="@drawable/bottom_bg">
+        android:background="@drawable/bottom_bg"
+        android:id="@+id/linearLayout">
 
         <RadioButton
             android:id="@+id/near_btn"
@@ -47,10 +55,7 @@
 
     </LinearLayout>
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"/>
+
 
 </RelativeLayout>
 
