@@ -2,7 +2,6 @@ package com.zhangli.betterlife;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -18,18 +17,18 @@ import com.zhangli.betterlife.fragment.SuperFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends FragmentActivity implements View.OnClickListener{
-    private RadioButton near_btn, cheap_btn, super_btn, pocket_btn, more_btn;
-    private ViewPager mViewPager;
+public class MainActivity extends BaseActivity implements View.OnClickListener{
     private static final int TAB_NEAR = 0;  //附近
     private static final int TAB_CHEAP = 1; //找便宜
     private static final int TAB_FAVOR = 2; //特惠
     private static final int TAB_POCKET = 3;//口袋
     private static final int TAB_MORE = 4;  //更多
 
+    private RadioButton near_btn, cheap_btn, super_btn, pocket_btn, more_btn;
+    private ViewPager mViewPager;
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_layout);
 

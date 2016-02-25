@@ -1,1 +1,1 @@
-include ':app', ':android-expandpoptab-library', ':imageSlider_viktor_library'
+include ':app', ':android-expandpoptab-library', ':imageSlider_viktor_library', ':apihttp', ':model', ':core'

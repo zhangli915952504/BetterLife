@@ -19,7 +19,6 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.google.gson.Gson;
 import com.scxh.slider.library.SliderLayout;
 import com.scxh.slider.library.SliderTypes.BaseSliderView;
 import com.scxh.slider.library.SliderTypes.TextSliderView;
@@ -29,21 +28,15 @@ import com.warmtel.expandtab.ExpandPopTabView;
 import com.warmtel.expandtab.KeyValueBean;
 import com.warmtel.expandtab.PopOneListView;
 import com.warmtel.expandtab.PopTwoListView;
+import com.zhangli.betterlife.BetterApplacation;
+import com.zhangli.betterlife.iamgeurl.ImageUtil;
 import com.zhangli.betterlife.R;
-import com.zhangli.betterlife.json.near.Merchant;
-import com.zhangli.betterlife.json.near.NearInfo;
-import com.zhangli.betterlife.json.near.NearResult;
-import com.zhangli.betterlife.json.tabbutton.CirclesBean;
-import com.zhangli.betterlife.json.tabbutton.Info;
-import com.zhangli.betterlife.json.tabbutton.Result;
+import com.zhangli.core.ActionCallbackListener;
+import com.zhangli.model.near.Merchant;
+import com.zhangli.model.tabbutton.CirclesBean;
+import com.zhangli.model.tabbutton.ConfigResult;
+import com.zhangli.model.tabbutton.Info;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -142,6 +135,7 @@ public class NearFragment extends Fragment {
                         }
                         return null;
                     }
+
                     @Override
                     protected void onPostExecute(Void aVoid) {
                         super.onPostExecute(aVoid);
@@ -156,46 +150,33 @@ public class NearFragment extends Fragment {
      * 设置二级菜单数据源
      */
     public void setPopTabViewData() {
-        String httpUrl = "http://www.warmtel.com:8080/configs";
-        new AsyncTask<String, Void, String>() {
+        BetterApplacation.myAppAcation.getNearConfig(new ActionCallbackListener<ConfigResult>() {
             @Override
-            protected String doInBackground(String... params) {
-                try {
-                    return getDataByConnectNet(params[0]);
-                } catch (IOException e) {
-                    return null;
+            public void onSuccess(ConfigResult data) {
+                Info info = data.getInfo();
+
+                List<KeyValueBean> parentList = new ArrayList<>();//父区域
+                List<ArrayList<KeyValueBean>> childList = new ArrayList<>();//子区域
+                for (CirclesBean circlesBean : info.getAreaKey()) {
+                    KeyValueBean keyValueBean = new KeyValueBean();
+                    keyValueBean.setKey(circlesBean.getKey());
+                    keyValueBean.setValue(circlesBean.getValue());
+                    parentList.add(keyValueBean);
+                    childList.add((ArrayList<KeyValueBean>) circlesBean.getCircles());
                 }
+                addItem(popTabView, info.getSortKey(), "", "排序");
+                addItem(popTabView, info.getDistanceKey(), "", "距离");
+                addItem(popTabView, info.getIndustryKey(), "", "行业");
+                addItem(popTabView, parentList, childList, "金牛区", "沙湾", "区域");
             }
 
             @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                Log.e("tag", "s" + s);
-                try {
-                    Gson gson = new Gson();
-                    Result result = gson.fromJson(s, Result.class);
-                    Info info = result.getInfo();
-
-                    addItem(popTabView, info.getSortKey(), "", "排序");
-                    addItem(popTabView, info.getDistanceKey(), "", "距离");
-                    addItem(popTabView, info.getIndustryKey(), "", "行业");
-
-                    List<KeyValueBean> parentList = new ArrayList<>();//父区域
-                    List<ArrayList<KeyValueBean>> childList = new ArrayList<>();//子区域
-                    for (CirclesBean circlesBean : info.getAreaKey()) {
-                        KeyValueBean keyValueBean = new KeyValueBean();
-                        keyValueBean.setKey(circlesBean.getKey());
-                        keyValueBean.setValue(circlesBean.getValue());
-                        parentList.add(keyValueBean);
-                        childList.add((ArrayList<KeyValueBean>) circlesBean.getCircles());
-                    }
-                    addItem(popTabView, parentList, childList, "金牛区", "沙湾", "区域");
-                } catch (Exception e) {
-                    Toast.makeText(getContext(), "网络异常", Toast.LENGTH_SHORT).show();
-                }
+            public void onFailure(String errorEvent, String message) {
+                Toast.makeText(getActivity(), errorEvent, Toast.LENGTH_SHORT).show();
             }
-        }.execute(httpUrl);
+        });
     }
+
 
     public void addItem(ExpandPopTabView expandTabView, List<KeyValueBean> lists, String defaultSelect, String defaultShowText) {
         PopOneListView popOneListView = new PopOneListView(getActivity());
@@ -221,21 +202,6 @@ public class NearFragment extends Fragment {
             }
         });
         expandTabView.addItemToExpandTab(defaultShowText, popTwoListView);
-    }
-
-
-    public String getDataByConnectNet(String httpUrl) throws IOException {
-        URL url = new URL(httpUrl);
-        HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-        connection.setRequestMethod("GET");
-        connection.setConnectTimeout(5000);
-        connection.setReadTimeout(8000);
-        if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
-            InputStream inputStream = connection.getInputStream();
-            return readStrFromInputStream(inputStream);
-        } else {
-            return "";
-        }
     }
 
     /**
@@ -335,7 +301,7 @@ public class NearFragment extends Fragment {
 
     //----------------上面滑动的大图添加数据--------------------------------------------------------
     public void ImageSlider() {
-        HashMap<String, String> sliderList = getData();
+        HashMap<String, String> sliderList = ImageUtil.getData();
         for (final String key
                 : sliderList.keySet()) {
             String url = sliderList.get(key);
@@ -353,56 +319,23 @@ public class NearFragment extends Fragment {
             });
             mSliderLayout.addSlider(textSliderView);
         }
-
-    }
-
-    //滑动图片的数据源
-    private HashMap<String, String> getData() {
-        HashMap<String, String> http_url_maps = new HashMap<String, String>();
-        http_url_maps.put("习近平接受八国新任驻华大使递交国书", "http://img.my.csdn.net/uploads/201407/26/1406383291_6518.jpg");
-        http_url_maps.put("天津港总裁出席发布会", "http://img.my.csdn.net/uploads/201407/26/1406383290_9329.jpg");
-        http_url_maps.put("瑞海公司从消防鉴定到安评一路畅通无阻", "http://img.my.csdn.net/uploads/201407/26/1406383290_1042.jpg");
-        http_url_maps.put("Airbnb高调入华 命运将如Uber一样吗？", "http://img.my.csdn.net/uploads/201407/26/1406383275_3977.jpg");
-        return http_url_maps;
     }
 
     /**
      * 解析json到adapter上
      */
     public void setListDta() {
-        String url = "http://www.warmtel.com:8080/around";
-        new AsyncTask<String, Void, String>() {
+        BetterApplacation.myAppAcation.getNearAround(new ActionCallbackListener<ArrayList<Merchant>>() {
             @Override
-            protected String doInBackground(String... params) {
-                try {
-                    return getDataByConnectNet(params[0]);
-                } catch (IOException e) {
-                    return null;
-                }
+            public void onSuccess(ArrayList<Merchant> data) {
+                myListAdpter.setList(data);
             }
 
             @Override
-            protected void onPostExecute(String s) {
-                super.onPostExecute(s);
-                Log.e("tag", "listdata.....>>>>+s:" + s);
-                try {
-                    Gson gson = new Gson();
-                    NearResult nearResult = gson.fromJson(s, NearResult.class);
-                    NearInfo info = nearResult.getInfo();
-                    List<Merchant> Merchantlist = info.getMerchantKey();
-
-                    myListAdpter.setList(Merchantlist);
-
-                    xlistView.setRefreshTime(new SimpleDateFormat("hh:mm:ss").format(System.currentTimeMillis()));
-                    xlistView.stopRefresh();
-                    xlistView.stopLoadMore();
-
-                    relativeLayout.setVisibility(View.GONE);
-                } catch (Exception e) {
-                    Toast.makeText(getContext(), "网络异常", Toast.LENGTH_SHORT).show();
-                }
+            public void onFailure(String errorEvent, String message) {
+                Toast.makeText(getActivity(), errorEvent, Toast.LENGTH_SHORT).show();
             }
-        }.execute(url);
+        });
     }
 
     /**
@@ -413,7 +346,9 @@ public class NearFragment extends Fragment {
         public void onReceiveLocation(BDLocation location) {
             try {
                 street = location.getAddrStr();
-                if (street != null) {
+                if (location.getLocType() == 63) {
+                    map_text.setText("网络不稳定，获取当前位置失败");
+                } else if (street != null) {
                     Toast.makeText(getContext(), street, Toast.LENGTH_LONG).show();
                     map_text.setText("当前位置：" + street);
                 }
@@ -433,29 +368,5 @@ public class NearFragment extends Fragment {
         mLocationClient.setLocOption(option);
         mLocationClient.registerLocationListener(myListener);
         mLocationClient.start();
-    }
-
-    /**
-     * 从输入流读数据
-     * @param is
-     * @return
-     * @throws IOException
-     */
-    public String readStrFromInputStream(InputStream is) throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
-        StringBuilder sb = new StringBuilder();
-        String line;
-        while ((line = reader.readLine()) != null) {
-            sb.append(line);
-        }
-        reader.close();
-        is.close();
-        return sb.toString();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mLocationClient.stop();
     }
 }

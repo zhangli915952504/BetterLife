@@ -16,6 +16,4 @@ public interface ActionCallbackListener<T> {
      * @param message    错误信息
      */
     void onFailure(String errorEvent, String message);
-
-
 }
